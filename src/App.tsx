@@ -1,29 +1,33 @@
-// src/App.tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import Chatbot from "./components/Chatbot";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import Services from "@/components/Services";
+import Features from "@/components/Features";
+import About from "@/components/About";
+import Gallery from "@/components/Gallery";
+import VideoShowcase from "@/components/VideoShowcase";
+import Testimonials from "@/components/Testimonials";
+import BookingForm from "@/components/BookingForm";
+import Footer from "@/components/Footer";
+import Chatbot from "@/components/Chatbot";
+import MobileBottomBar from "@/components/MobileBottomBar";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Chatbot />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <div className="min-h-screen bg-white">
+      <Header />
+      <Hero />
+      <Services />
+      <Features />
+      <About />
+      <Gallery />
+      <VideoShowcase />
+      <Testimonials />
+      <BookingForm />
+      <Footer />
+      <Chatbot />
+      <MobileBottomBar />
+    </div>
+  );
+}
 
 export default App;

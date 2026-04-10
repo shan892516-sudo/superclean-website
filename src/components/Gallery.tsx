@@ -1,151 +1,128 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
 
-import beforeKitchen from "@/assets/before-kitchen.jpg";
-import afterKitchen from "@/assets/after-kitchen.jpg";
-import beforeBathroom from "@/assets/before-bathroom.jpg";
-import afterBathroom from "@/assets/after-bathroom.jpg";
-import beforeLiving from "@/assets/before-living.jpg";
-import afterLiving from "@/assets/after-living.jpg";
+import before1 from "@/assets/before1.png";
+import after1 from "@/assets/after1.png";
+import before2 from "@/assets/before2.png";
+import after2 from "@/assets/after2.png";
+import before3 from "@/assets/before-living.jpg";
+import after3 from "@/assets/after-living.jpg";
 
-const pairs = [
-  { label: "Kitchen", before: beforeKitchen, after: afterKitchen },
-  { label: "Bathroom", before: beforeBathroom, after: afterBathroom },
-  { label: "Living Room", before: beforeLiving, after: afterLiving },
-];
-
-const BeforeAfterSlider = ({
-  before,
-  after,
-  label,
-}: {
+type BeforeAfterCardProps = {
   before: string;
   after: string;
-  label: string;
-}) => {
-  const [pos, setPos] = useState(50);
+  title: string;
+};
+
+const BeforeAfterCard = ({ before, after, title }: BeforeAfterCardProps) => {
+  const [slider, setSlider] = useState(50);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const draggingRef = useRef(false);
+
+  const updateSlider = (clientX: number) => {
+    if (!containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const percent = ((clientX - rect.left) / rect.width) * 100;
+    const clamped = Math.max(0, Math.min(100, percent));
+    setSlider(clamped);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    updateSlider(e.clientX);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return;
+    updateSlider(e.clientX);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = false;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
 
   return (
-    <div className="relative overflow-hidden rounded-xl shadow-lg aspect-[4/3] select-none group bg-white">
-      <img
-        src={after}
-        alt={`${label} after cleaning`}
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="eager"
-      />
+    <div className="flex w-full flex-col items-center">
+      <div className="w-full max-w-[350px] overflow-hidden rounded-[20px] bg-white shadow-[0_10px_30px_rgba(15,23,42,0.10)] sm:max-w-[380px] md:max-w-[360px]">
+        <div
+          ref={containerRef}
+          className="relative aspect-[16/11] w-full overflow-hidden rounded-[20px] bg-slate-100"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+        >
+          <img
+            src={after}
+            alt={`${title} after`}
+            className="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
+            draggable={false}
+          />
 
-      <div
-        className="absolute inset-0 overflow-hidden"
-        style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
-      >
-        <img
-          src={before}
-          alt={`${label} before cleaning`}
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="eager"
-        />
-      </div>
+          <img
+            src={before}
+            alt={`${title} before`}
+            className="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
+            style={{
+              clipPath: `inset(0 ${100 - slider}% 0 0)`,
+            }}
+            draggable={false}
+          />
 
-      <div
-        className="absolute top-0 bottom-0 z-10"
-        style={{ left: `${pos}%` }}
-      >
-        <div className="absolute top-0 bottom-0 w-0.5 -translate-x-1/2 bg-background/90" />
-        <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-background border-2 border-primary flex items-center justify-center shadow-md cursor-ew-resize">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            className="text-primary"
+          <div className="absolute left-4 top-4 z-20 min-w-[84px] rounded-[10px] bg-[#dbe8f3] px-4 py-[10px] text-center text-[13px] font-semibold leading-none text-white shadow-sm">
+            Before
+          </div>
+
+          <div className="absolute right-4 top-4 z-20 min-w-[84px] rounded-[10px] bg-[#5b926f] px-4 py-[10px] text-center text-[13px] font-semibold leading-none text-white shadow-sm">
+            After
+          </div>
+
+          <div
+            className="absolute top-0 z-20 h-full w-[2px] bg-white/90"
+            style={{ left: `${slider}%`, transform: "translateX(-50%)" }}
+          />
+
+          <div
+            className="absolute top-1/2 z-30 cursor-ew-resize touch-none"
+            style={{ left: `${slider}%`, transform: "translate(-50%, -50%)" }}
           >
-            <path
-              d="M5 3L1.5 8L5 13M11 3L14.5 8L11 13"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+            <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[#5b926f] bg-white shadow-md">
+              <span className="text-[16px] font-semibold leading-none text-[#5b926f]">
+                ‹›
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <span className="absolute top-3 left-3 bg-secondary/80 text-secondary-foreground text-xs font-semibold px-2 py-1 rounded">
-        Before
-      </span>
-      <span className="absolute top-3 right-3 bg-primary/80 text-primary-foreground text-xs font-semibold px-2 py-1 rounded">
-        After
-      </span>
-
-      <input
-        type="range"
-        min="0"
-        max="100"
-        value={pos}
-        onChange={(e) => setPos(Number(e.target.value))}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20"
-        aria-label={`Before and after slider for ${label}`}
-      />
+      <h3 className="mt-4 text-[15px] font-medium text-slate-700">
+        {title}
+      </h3>
     </div>
   );
 };
 
 const Gallery = () => {
   return (
-    <section id="gallery" className="section-padding bg-background">
-      <div className="container-narrow">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground mb-3">
+    <section id="gallery" className="bg-white px-4 py-[56px] md:py-[80px]">
+      <div className="mx-auto max-w-[1180px]">
+        <div className="mx-auto max-w-[820px] text-center">
+          <h2 className="text-[34px] font-bold text-slate-900 md:text-[54px]">
             See the Difference
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+
+          <p className="mt-4 text-[16px] text-slate-600 md:text-[20px]">
             Drag the slider to reveal our before &amp; after transformations.
           </p>
-        </motion.div>
-
-        <div className="hidden md:grid md:grid-cols-3 gap-6">
-          {pairs.map((p, i) => (
-            <motion.div
-              key={p.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <BeforeAfterSlider {...p} />
-              <p className="text-center text-sm font-medium text-muted-foreground mt-3">
-                {p.label}
-              </p>
-            </motion.div>
-          ))}
         </div>
 
-        <div
-          className="md:hidden overflow-x-auto overscroll-x-contain snap-x snap-mandatory scroll-smooth pb-2 scrollbar-hide"
-          style={{
-            WebkitOverflowScrolling: "touch",
-            scrollPaddingLeft: "16px",
-            scrollPaddingRight: "16px",
-          }}
-        >
-          <div className="flex gap-4 px-4 w-max">
-            {pairs.map((p) => (
-              <div
-                key={p.label}
-                className="snap-start shrink-0 w-[82vw] max-w-[340px]"
-              >
-                <BeforeAfterSlider {...p} />
-                <p className="text-center text-sm font-medium text-muted-foreground mt-3">
-                  {p.label}
-                </p>
-              </div>
-            ))}
-          </div>
+        <div className="mt-10 flex flex-col items-center gap-8 md:grid md:grid-cols-3 md:gap-6 md:justify-items-center">
+          <BeforeAfterCard before={before1} after={after1} title="Kitchen" />
+          <BeforeAfterCard before={before2} after={after2} title="Bathroom" />
+          <BeforeAfterCard before={before3} after={after3} title="Living Room" />
         </div>
       </div>
     </section>
