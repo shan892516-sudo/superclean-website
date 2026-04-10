@@ -40,7 +40,6 @@ const VideoShowcase = () => {
           </p>
         </motion.div>
 
-        {/* Desktop / Tablet */}
         <div className="hidden md:grid md:grid-cols-3 gap-6">
           {videos.map((v, i) => (
             <motion.div
@@ -72,24 +71,26 @@ const VideoShowcase = () => {
           ))}
         </div>
 
-        {/* Mobile swipe */}
-        <div className="md:hidden -mx-4 px-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-          <div className="flex gap-4 w-max">
-            {videos.map((v, i) => (
-              <motion.div
+        <div
+          className="md:hidden overflow-x-auto overscroll-x-contain snap-x snap-mandatory scroll-smooth pb-2 scrollbar-hide"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            scrollPaddingLeft: "16px",
+            scrollPaddingRight: "16px",
+          }}
+        >
+          <div className="flex gap-4 px-4 w-max">
+            {videos.map((v) => (
+              <div
                 key={v.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="snap-center w-[85vw] max-w-sm shrink-0"
+                className="snap-start shrink-0 w-[82vw] max-w-[340px]"
               >
-                <div className="relative aspect-video overflow-hidden rounded-xl shadow-lg group cursor-pointer bg-secondary">
+                <div className="relative aspect-video overflow-hidden rounded-xl shadow-lg bg-secondary">
                   <img
                     src={v.thumbnail}
                     alt={v.title}
                     className="w-full h-full object-cover"
-                    loading="lazy"
+                    loading="eager"
                     width={800}
                     height={500}
                   />
@@ -102,7 +103,7 @@ const VideoShowcase = () => {
                 <p className="text-center text-sm font-medium text-foreground mt-3">
                   {v.title}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

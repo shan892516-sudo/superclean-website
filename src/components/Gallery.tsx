@@ -26,12 +26,12 @@ const BeforeAfterSlider = ({
   const [pos, setPos] = useState(50);
 
   return (
-    <div className="relative overflow-hidden rounded-xl shadow-lg aspect-[4/3] select-none group">
+    <div className="relative overflow-hidden rounded-xl shadow-lg aspect-[4/3] select-none group bg-white">
       <img
         src={after}
         alt={`${label} after cleaning`}
         className="absolute inset-0 w-full h-full object-cover"
-        loading="lazy"
+        loading="eager"
       />
 
       <div
@@ -42,7 +42,7 @@ const BeforeAfterSlider = ({
           src={before}
           alt={`${label} before cleaning`}
           className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
+          loading="eager"
         />
       </div>
 
@@ -108,7 +108,6 @@ const Gallery = () => {
           </p>
         </motion.div>
 
-        {/* Desktop / Tablet */}
         <div className="hidden md:grid md:grid-cols-3 gap-6">
           {pairs.map((p, i) => (
             <motion.div
@@ -126,23 +125,25 @@ const Gallery = () => {
           ))}
         </div>
 
-        {/* Mobile swipe */}
-        <div className="md:hidden -mx-4 px-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-          <div className="flex gap-4 w-max">
-            {pairs.map((p, i) => (
-              <motion.div
+        <div
+          className="md:hidden overflow-x-auto overscroll-x-contain snap-x snap-mandatory scroll-smooth pb-2 scrollbar-hide"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            scrollPaddingLeft: "16px",
+            scrollPaddingRight: "16px",
+          }}
+        >
+          <div className="flex gap-4 px-4 w-max">
+            {pairs.map((p) => (
+              <div
                 key={p.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="snap-center w-[85vw] max-w-sm shrink-0"
+                className="snap-start shrink-0 w-[82vw] max-w-[340px]"
               >
                 <BeforeAfterSlider {...p} />
                 <p className="text-center text-sm font-medium text-muted-foreground mt-3">
                   {p.label}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
