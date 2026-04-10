@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 207 100% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 207 100% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 207 100% 8%;
+
+    --primary: 153 46% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 207 100% 8%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 150 10% 96%;
+    --muted-foreground: 207 20% 40%;
+
+    --accent: 150 30% 94%;
+    --accent-foreground: 153 46% 25%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 153 46% 33%;
+
+    --radius: 0.75rem;
+
+    --hero-overlay: linear-gradient(135deg, hsla(207, 100%, 8%, 0.7), hsla(153, 46%, 33%, 0.4));
+    --gradient-primary: linear-gradient(135deg, hsl(153, 46%, 33%), hsl(153, 60%, 25%));
+    --gradient-navy: linear-gradient(135deg, hsl(207, 100%, 8%), hsl(207, 80%, 15%));
+    --shadow-card: 0 4px 24px -4px hsla(207, 100%, 8%, 0.08);
+    --shadow-elevated: 0 12px 40px -8px hsla(207, 100%, 8%, 0.15);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+  }
+  .container-narrow {
+    @apply max-w-6xl mx-auto;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+}
